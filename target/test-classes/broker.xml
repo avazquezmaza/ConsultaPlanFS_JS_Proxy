@@ -1,0 +1,15 @@
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:activemq" xsi:schemaLocation="urn:activemq /schema/artemis-server.xsd">
+   <core xmlns="urn:activemq:core">
+
+      <persistence-enabled>false</persistence-enabled>
+
+      <!-- disable security -->
+      <security-enabled>false</security-enabled>
+
+      <!-- AMQP acceptor -->
+      <acceptors>
+         <acceptor name="amqp">tcp://localhost:5672?protocols=AMQP</acceptor>
+      </acceptors>
+
+   </core>
+</configuration>

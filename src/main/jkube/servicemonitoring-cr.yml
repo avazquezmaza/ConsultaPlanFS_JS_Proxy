@@ -1,0 +1,17 @@
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: consultaplanfs-js-proxy
+  name: consultaplanfs-js-proxy
+spec:
+  endpoints:
+  - interval: 30s
+    port: prometheus
+    scheme: http
+    path: /metrics
+  selector:
+    matchLabels:
+      app: consultaplanfs-js-proxy

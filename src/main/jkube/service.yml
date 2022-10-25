@@ -1,0 +1,28 @@
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9779"
+    prometheus.io/path: "/metrics"
+  labels:
+    jkube.io/exposeUrl: true
+    app: consultaplanfs-js-proxy
+  name: consultaplanfs-js-proxy
+spec:
+  type: LoadBalancer
+  ports:
+  
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+    
+  - name: prometheus
+    port: 9779
+    protocol: TCP
+    targetPort: 9779
+  selector:
+    app: consultaplanfs-js-proxy

@@ -1,0 +1,59 @@
+
+metadata:
+  annotations:
+    app.openshift.io/connects-to: >-
+      ["service-registry-service"]
+  labels:
+    app: consultaplanfs-js-proxy
+    app.openshift.io/runtime: camel
+    app.kubernetes.io/part-of: APP_Movil
+    rht_comp: Fuse
+    rht_comp_ver: 7.10
+    rht_prod_name: Red_Hat_Integration
+    rht_prod_ver: 2022.Q2
+  name: consultaplanfs-js-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consultaplanfs-js-proxy
+  template:
+    metadata:
+      annotations:
+        
+      labels:
+        app: consultaplanfs-js-proxy
+    spec:
+      volumes:
+        - name: cxf-truststore
+          secret:
+            secretName: truststore-secret
+            items:
+              - key: truststore.ts
+                path: truststore.ts
+            defaultMode: 420
+      containers:
+        - resources:
+            requests:
+              cpu: 0.05
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 256Mi
+          env:
+          - name: SPRING_APPLICATION_JSON
+            value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
+          - name: JAEGER_SERVICE_NAME
+            value: 'consultaplanfs-js-proxy'
+          - name: JAEGER_AGENT_HOST
+            value: 'jaeger-all-in-one-inmemory-agent'
+          - name: JAEGER_SAMPLER_PARAM
+            value: '1.0'
+          - name: AB_JMX_EXPORTER_CONFIG
+            value: "prometheus-config.yml"
+      
+          volumeMounts:
+            - name: cxf-truststore
+              readOnly: true
+              mountPath: /mnt/secrets
+   
