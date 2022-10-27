@@ -1,0 +1,74 @@
+<WL5G3N0:definitions name="QueryPurchasedOffering_v1" targetNamespace="http://telefonica.com/globalIntegration/services/SOAP/CustomerAndProductDataCollection/QueryPurchasedOffering/v1" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://telefonica.com/globalIntegration/services/QueryPurchasedOffering/v1" xmlns:WL5G3N2="http://telefonica.com/globalIntegration/header" xmlns:WL5G3N3="http://telefonica.com/globalIntegration/fault" xmlns:WL5G3N4="http://telefonica.com/globalIntegration/services/SOAP/CustomerAndProductDataCollection/QueryPurchasedOffering/v1" xmlns:WL5G3N5="http://schemas.xmlsoap.org/wsdl/soap/">
+  <WL5G3N0:documentation>Hada invoke service in the OSB to query details of subscriber’s purchased offerings.
+
+Functional Gap to be Fulfilled
+To Query details of subscriber’s purchased offerings. - Generado por TER - 2017.08.11 23:48:34 - NO MODIFICAR A MANO</WL5G3N0:documentation>
+  <WL5G3N0:types>
+    <xsd:schema targetNamespace="http://telefonica.com/globalIntegration/services/SOAP/CustomerAndProductDataCollection/QueryPurchasedOffering/v1" xmlns:cab="http://telefonica.com/globalIntegration/header" xmlns:flt="http://telefonica.com/globalIntegration/fault" xmlns:p1="http://telefonica.com/globalIntegration/services/QueryPurchasedOffering/v1" xmlns:serv="http://telefonica.com/globalIntegration/services/SOAP/CustomerAndProductDataCollection/QueryPurchasedOffering/v1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import namespace="http://telefonica.com/globalIntegration/services/QueryPurchasedOffering/v1" schemaLocation="../schemas/XMLSchema_290342992.xsd">
+			</xsd:import>
+      <xsd:import namespace="http://telefonica.com/globalIntegration/header" schemaLocation="../schemas/XMLSchema_1305992392.xsd">
+			</xsd:import>
+      <xsd:import namespace="http://telefonica.com/globalIntegration/fault" schemaLocation="../schemas/XMLSchema_610197526.xsd">
+			</xsd:import>
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="queryPurchasedOfferingRequest">
+    <WL5G3N0:documentation>queryPurchasedOfferingRequest Message Type</WL5G3N0:documentation>
+    <WL5G3N0:part element="WL5G3N1:queryPurchasedOfferingRequest" name="queryPurchasedOfferingBodyReq"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="queryPurchasedOfferingResponse">
+    <WL5G3N0:documentation>queryPurchasedOfferingResponse Message Type</WL5G3N0:documentation>
+    <WL5G3N0:part element="WL5G3N1:queryPurchasedOfferingResponse" name="queryPurchasedOfferingBodyRes"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="queryPurchasedOfferingHeaderReq">
+    <WL5G3N0:documentation>queryPurchasedOfferingHeaderReq is the common definition of request header</WL5G3N0:documentation>
+    <WL5G3N0:part element="WL5G3N2:HeaderIn" name="queryPurchasedOfferingHeaderReq"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="queryPurchasedOfferingHeaderRes">
+    <WL5G3N0:documentation>queryPurchasedOfferingHeaderRes is the common definition of response header</WL5G3N0:documentation>
+    <WL5G3N0:part element="WL5G3N2:HeaderOut" name="queryPurchasedOfferingHeaderRes"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="MessageFault">
+    <WL5G3N0:documentation>The definition of message fault is unique</WL5G3N0:documentation>
+    <WL5G3N0:part element="WL5G3N3:MessageFault" name="MessageCommonFault"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="QueryPurchasedOffering_v1">
+    <WL5G3N0:documentation>Hada invoke service in the OSB to query details of subscriber’s purchased offerings.
+
+Functional Gap to be Fulfilled
+To Query details of subscriber’s purchased offerings.</WL5G3N0:documentation>
+    <WL5G3N0:operation name="queryPurchasedOffering">
+      <WL5G3N0:documentation>Hada invoke service in the OSB to query details of subscriber’s purchased offerings.
+
+Functional Gap to be Fulfilled
+To Query details of subscriber’s purchased offerings.</WL5G3N0:documentation>
+      <WL5G3N0:input message="WL5G3N4:queryPurchasedOfferingRequest" name="queryPurchasedOfferingRequest"/>
+      <WL5G3N0:output message="WL5G3N4:queryPurchasedOfferingResponse" name="queryPurchasedOfferingResponse"/>
+      <WL5G3N0:fault message="WL5G3N4:MessageFault" name="MessageFault"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="QueryPurchasedOfferingBinding" type="WL5G3N4:QueryPurchasedOffering_v1">
+    <WL5G3N5:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="queryPurchasedOffering">
+      <WL5G3N5:operation soapAction="http://telefonica.com/globalIntegration/services/soap1.1/queryPurchasedOffering"/>
+      <WL5G3N0:input name="queryPurchasedOfferingRequest">
+        <WL5G3N5:body parts="queryPurchasedOfferingBodyReq" use="literal"/>
+        <WL5G3N5:header message="WL5G3N4:queryPurchasedOfferingHeaderReq" part="queryPurchasedOfferingHeaderReq" use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output name="queryPurchasedOfferingResponse">
+        <WL5G3N5:body parts="queryPurchasedOfferingBodyRes" use="literal"/>
+        <WL5G3N5:header message="WL5G3N4:queryPurchasedOfferingHeaderRes" part="queryPurchasedOfferingHeaderRes" use="literal"/>
+      </WL5G3N0:output>
+      <WL5G3N0:fault name="MessageFault">
+        <WL5G3N5:fault name="MessageFault" use="literal"/>
+      </WL5G3N0:fault>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="QueryPurchasedOfferingBindingQSService">
+    <WL5G3N0:documentation>OSB Service</WL5G3N0:documentation>
+    <WL5G3N0:port binding="WL5G3N4:QueryPurchasedOfferingBinding" name="QueryPurchasedOfferingBindingQSPort">
+      <WL5G3N5:address location="http://10.203.114.94:7006/globalIntegration/services/CustomerAndProductDataCollection/QueryPurchasedOffering_v1"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

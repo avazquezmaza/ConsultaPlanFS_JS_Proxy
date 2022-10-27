@@ -23,7 +23,6 @@
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 		<maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
 		<java.version>11</java.version>
-
 	</properties>
 
 	<dependencyManagement>
@@ -109,10 +108,15 @@
 			<artifactId>camel-micrometer-starter</artifactId>
 		</dependency>
 		<!-- Testing Support -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>junit</groupId> -->
+<!-- 			<artifactId>junit</artifactId> -->
+<!-- 			<scope>test</scope> -->
+<!-- 		</dependency> -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>5.7.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -157,18 +161,6 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven-surefire-plugin.version}</version>
-				<inherited>true</inherited>
-				<configuration>
-					<argLine>${argLine} -DenableImageStreamDetection=true</argLine>
-					<excludes>
-						<exclude>**/*KT.java</exclude>
-					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
