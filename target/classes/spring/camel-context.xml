@@ -49,19 +49,14 @@
         <route id="router">
             <from id="_from1" uri="seda:dispatchRequest"/>
             <doTry id="_doTry1">
-                <!--flow-->
-                <!--branch-node-->
                 <choice id="_choice1">
-                    <!--branch-table./ctx:transport/ctx:request/http:http-method/text()-->
-                    <!--branch-->
                     <when id="_when1">
                         <simple resultType="java.lang.String">${header.CamelHttpMethod} == 'POST'</simple>
                         <to id="_to1" uri="direct:PipelinePairConsultaPlanFS_request"/>
-                        <to id="_to2" uri="direct:PipelinePairConsultaPlanFS_response"/>
+                        <to id="_to2" uri="direct:RouteNodeQueryPurchasedOffering_request"/>
+                        <to id="_to3" uri="direct:PipelinePairConsultaPlanFS_response"/>
                     </when>
-                    <!--default-branch-->
                     <otherwise id="_otherwise1">
-                        <!--flow-->
                         <to id="_to3" uri="direct:Default1_request"/>
                         <to id="_to4" uri="direct:Default1_response"/>
                     </otherwise>
@@ -74,13 +69,9 @@
             </doTry>
             <removeHeaders id="_removeHeaders1" pattern="*"/>
         </route>
-        <!--router-->
-        <!--pipeline[@type='request']-->
         <route id="PipelinePairConsultaPlanFS_request">
             <from id="_from2" uri="direct:PipelinePairConsultaPlanFS_request"/>
             <log id="_log2" loggingLevel="INFO" message="Starting request-pipeline PipelinePairConsultaPlanFS_request"/>
-            <!--stage-->
-            <!--actions-->
             <choice id="_choice2">
                 <when id="_when2">
                     <camel:simple>${header.phoneNumber} == null || ${header.phoneNumber} == ':phoneNumber'</camel:simple>
@@ -103,25 +94,20 @@
                         id="_throwException1" message="${body}"/>
                 </when>
             </choice>
-            <!--stage-->
-            <!--actions-->
             <bean id="_bean1" method="jsonToXML(${body})" ref="JsonXml"/>
             <convertBodyTo id="_convertBodyTo1" type="String"/>
             <setProperty id="_setProperty8" propertyName="peticion">
                 <xquery type="java.lang.String">
 					declare variable $in.body external;
 					parse-xml-fragment($in.body)
-				</xquery>
+                </xquery>
             </setProperty>
-            <!--stage-->
-            <!--actions-->
             <choice id="_choice3">
                 <when id="_when3">
                     <xquery>
-						declare variable $in.body external;
-						data(parse-xml-fragment($in.body)/*/*[local-name()!="descIncEureka"])
+						declare variable $in.body external; data(parse-xml-fragment($in.body)/*/*[local-name()!="descIncEureka"])
 						and data(parse-xml-fragment($in.body)/*/*[local-name()!="idContacto"])
-					</xquery>
+                    </xquery>
                     <camel:log id="_log17" message="Sin errores"/>
                 </when>
                 <otherwise id="_otherwise3">
@@ -141,166 +127,245 @@
                         <xquery>'application/*[local-name()="json"];charset=iso-8859-1'</xquery>
                     </setHeader>
                     <throwException exceptionType="java.lang.Exception"
-                        id="_throwException2" message="${body}"/>
+                        id="_throwException7" message="${body}"/>
                 </otherwise>
             </choice>
             <log id="_log3" loggingLevel="INFO" message="Completed request-pipeline PipelinePairConsultaPlanFS_request"/>
         </route>
-        <!--pipeline[@type='request']-->
         <route id="Default1_request">
             <from id="_from3" uri="direct:Default1_request"/>
             <log id="_log4" loggingLevel="INFO" message="Starting request-pipeline Default1_request"/>
             <log id="_log5" loggingLevel="INFO" message="Completed request-pipeline Default1_request"/>
         </route>
-        <!--pipeline[@type='response']-->
+        <route id="RouteNodeQueryPurchasedOffering_request">
+            <from id="_from9" uri="direct:RouteNodeQueryPurchasedOffering_request"/>
+            <log id="_log18" loggingLevel="INFO" message="Starting RouteNodeQueryPurchasedOffering_request"/>
+            <doTry id="_doTry3">
+                <setProperty id="_setProperty1" propertyName="phone">
+                    <camel:simple>${header.phoneNumber}</camel:simple>
+                </setProperty>
+                <setHeader headerName="inputBodyInteraction" id="_setHeader18">
+                    <xquery>resource:classpath:QueryPurchasedOfferingRequest.xquery</xquery>
+                </setHeader>
+                <setProperty id="_setProperty6" propertyName="originator">
+                    <xquery>'co:es:TEF: USSD:USSD'</xquery>
+                </setProperty>
+                <setProperty id="_setProperty7" propertyName="userID">
+                    <xquery>22</xquery>
+                </setProperty>
+                <setProperty id="_setProperty14" propertyName="country">
+                    <xquery>'co'</xquery>
+                </setProperty>
+                <setProperty id="_setProperty52" propertyName="entity">
+                    <xquery>'TEF'</xquery>
+                </setProperty>
+                <setProperty id="_setProperty53" propertyName="system">
+                    <xquery>'USSD'</xquery>
+                </setProperty>
+                <setProperty id="_setProperty54" propertyName="userValue">
+                    <xquery>'Greta_USSD'</xquery>
+                </setProperty>
+                <setProperty id="_setProperty55" propertyName="passwordValue">
+                    <xquery>'qXQvjReSEjy22iaNjPAPB8btX4oEgsgt6nNmTzkQmpU='</xquery>
+                </setProperty>
+                <setProperty id="_setProperty56" propertyName="lang">
+                    <xquery>'es'</xquery>
+                </setProperty>
+                <setProperty id="_setProperty57" propertyName="operation">
+                    <xquery>'QueryPurchasedOffering_v1'</xquery>
+                </setProperty>
+                <setProperty id="_setProperty58" propertyName="chanelValue">
+                    <xquery>22</xquery>
+                </setProperty>
+                <setHeader headerName="inputHeaderInteraction" id="_setHeader19">
+                    <xquery>resource:classpath:headerFSRequest.xquery</xquery>
+                </setHeader>
+                <setProperty id="_setProperty59" propertyName="inputInteraction">
+                    <xquery>
+                        declare variable $in.headers.inputHeaderInteraction external;
+                        declare variable $in.headers.inputBodyInteraction external;
+                        &lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:head="http://telefonica.com/globalIntegration/header" xmlns:v1="http://telefonica.com/globalIntegration/services/QueryPurchasedOffering/v1"&gt;
+                        &lt;soapenv:Header&gt;
+                        {parse-xml-fragment($in.headers.inputHeaderInteraction)}
+                        &lt;/soapenv:Header&gt;
+                        &lt;soapenv:Body&gt;
+                        {parse-xml-fragment($in.headers.inputBodyInteraction)}
+                        &lt;/soapenv:Body&gt;
+                        &lt;/soapenv:Envelope&gt;
+                    </xquery>
+                </setProperty>
+                <setBody id="_setBody5">
+                    <simple resultType="java.lang.String">${exchangeProperty.inputInteraction}</simple>
+                </setBody>
+                <camel:setHeader headerName="Accept" id="_setHeader20">
+                    <camel:constant>text/xml</camel:constant>
+                </camel:setHeader>
+                <camel:setHeader headerName="Content-Type" id="_setHeader21">
+                    <camel:constant>text/xml</camel:constant>
+                </camel:setHeader>
+                <camel:enrich id="callQuerypurchasedofferingfs">
+                    <camel:simple>{{service.querypurchasedofferingfs_bs_business.url}}</camel:simple>
+                </camel:enrich>
+                <choice id="_choice4">
+                    <when id="_when4">
+                        <xquery>
+						declare variable $in.body external; 
+						exists($in.body/*:queryPurchasedOfferingResponse/*:rspBodyQPOItem/*:offeringInstanceQPOItem)
+                    </xquery>
+                        <camel:log id="_log19" message="Sin errores"/>
+                    </when>
+                    <otherwise id="_otherwise2">
+                        <throwException
+                            exceptionType="java.lang.Exception"
+                            id="_throwException2" message="${body}"/>
+                    </otherwise>
+                </choice>
+                <doCatch id="_doCatch3">
+                    <exception>java.lang.Exception</exception>
+                    <log id="_log20" loggingLevel="ERROR" message="${exception.message}, ${exception.stacktrace}"/>
+                    <to id="_to7" uri="direct:_onErrorHandler-5282490157209716060-252edc8b.15f7d309bbd.-7d73"/>
+                </doCatch>
+            </doTry>
+        </route>
         <route id="PipelinePairConsultaPlanFS_response">
             <from id="_from4" uri="direct:PipelinePairConsultaPlanFS_response"/>
             <log id="_log6" loggingLevel="INFO" message="Starting response-pipeline PipelinePairConsultaPlanFS_response"/>
-            <!--stage-->
             <doTry id="_doTry2">
-                <!--actions-->
                 <setHeader headerName="operationName" id="_setHeader3">
                     <constant/>
                 </setHeader>
                 <setHeader headerName="operationNamespace" id="_setHeader4">
                     <constant/>
                 </setHeader>
-                <process id="_process1" ref="outboundProcessor"/>
-                <log id="_log20" loggingLevel="INFO" message="-----------------------------||||||| ${property.inbound}"/>
-                <log id="_log20" loggingLevel="INFO" message="-----------------------------||||||| ${headers}"/>
                 <camel:setHeader headerName="peticion" id="_setHeader17">
                     <camel:simple>${property.peticion}</camel:simple>
                 </camel:setHeader>
                 <setProperty id="_setProperty13" propertyName="param1">
                     <xquery>
-						declare variable $in.headers.peticion external;
-						data(parse-xml-fragment($in.headers.peticion)/*/*[local-name()="descIncEureka"])
-					</xquery>
+                        declare variable $in.headers.peticion external; data(parse-xml-fragment($in.headers.peticion)/*/*[local-name()="descIncEureka"])
+                    </xquery>
                 </setProperty>
                 <bean id="_bean2"
                     method="decodeBase64(${exchangeProperty.param1})" ref="Utility"/>
-                <setProperty id="_setProperty14" propertyName="mensajeDescIncidencia">
+                <setProperty id="_setProperty5" propertyName="mensajeDescIncidencia">
                     <simple>${body}</simple>
                 </setProperty>
                 <removeProperty id="_removeProperty2" propertyName="param1"/>
-                <setHeader headerName="xqueryContext" id="_setHeader5">
-                    <simple>${exchangeProperty.inbound}</simple>
-                </setHeader>
                 <setProperty id="_setProperty15" propertyName="primaryTelephoneNumber">
-                    <xquery headerName="xqueryContext">fn:tokenize(data(/ctx:transport/ctx:request/http:relative-URI),'/')[2]</xquery>
+                    <camel:simple>${header.phoneNumber}</camel:simple>
                 </setProperty>
-                <removeHeader headerName="xqueryContext" id="_removeHeader1"/>
                 <setHeader headerName="xqueryContext" id="_setHeader6">
                     <simple>${exchangeProperty.peticion}</simple>
                 </setHeader>
                 <setProperty id="_setProperty16" propertyName="contactTypePartyAccountContact">
-                    <xquery headerName="xqueryContext">data(/idContacto)</xquery>
+                    <xquery headerName="xqueryContext">
+                        declare variable $in.headers.xqueryContext external; data(parse-xml-fragment($in.headers.xqueryContext)/*/*[local-name()="idContacto"])
+                    </xquery>
                 </setProperty>
                 <removeHeader headerName="xqueryContext" id="_removeHeader2"/>
-                <setProperty id="_setProperty17" propertyName="descriptionBusinessInteraction">
+                <setProperty id="_setProperty13" propertyName="descriptionBusinessInteraction">
                     <simple resultType="java.lang.String">${exchangeProperty.mensajeDescIncidencia}</simple>
                 </setProperty>
-                <setProperty id="_setProperty18" propertyName="inputBodyInteraction">
+                <setHeader headerName="inputBodyInteraction" id="_setHeader5">
                     <xquery>resource:classpath:CreateInteractionRq.xquery</xquery>
-                </setProperty>
-                <setProperty id="_setProperty19" propertyName="originator">
+                </setHeader>
+                <setProperty id="_setProperty15" propertyName="originator">
                     <xquery>'co:es:TEF: APP:APP'</xquery>
                 </setProperty>
-                <setProperty id="_setProperty20" propertyName="userID">
+                <setProperty id="_setProperty16" propertyName="userID">
                     <xquery>13</xquery>
                 </setProperty>
-                <setProperty id="_setProperty21" propertyName="country">
+                <setProperty id="_setProperty17" propertyName="country">
                     <xquery>'co'</xquery>
                 </setProperty>
-                <setProperty id="_setProperty22" propertyName="entity">
+                <setProperty id="_setProperty18" propertyName="entity">
                     <xquery>'TEF'</xquery>
                 </setProperty>
-                <setProperty id="_setProperty23" propertyName="system">
+                <setProperty id="_setProperty19" propertyName="system">
                     <xquery>'APP'</xquery>
                 </setProperty>
-                <setProperty id="_setProperty24" propertyName="userValue">
+                <setProperty id="_setProperty20" propertyName="userValue">
                     <xquery>'Greta_USSD'</xquery>
                 </setProperty>
-                <setProperty id="_setProperty25" propertyName="passwordValue">
+                <setProperty id="_setProperty21" propertyName="passwordValue">
                     <xquery>'qXQvjReSEjy22iaNjPAPB8btX4oEgsgt6nNmTzkQmpU='</xquery>
                 </setProperty>
-                <setProperty id="_setProperty26" propertyName="lang">
+                <setProperty id="_setProperty22" propertyName="lang">
                     <xquery>'Es'</xquery>
                 </setProperty>
-                <setProperty id="_setProperty27" propertyName="operation">
+                <setProperty id="_setProperty23" propertyName="operation">
                     <xquery>'BalanceTransfer'</xquery>
                 </setProperty>
-                <setProperty id="_setProperty28" propertyName="chanelValue">
+                <setProperty id="_setProperty24" propertyName="chanelValue">
                     <xquery>13</xquery>
                 </setProperty>
-                <setProperty id="_setProperty281" propertyName="destination">
-                    <xquery/>
-                </setProperty>
-                <log id="_log18" loggingLevel="INFO" message="------------------------------- ${body}"/>
-                <setProperty id="_setProperty29" propertyName="inputHeaderInteraction">
+                <setHeader headerName="inputHeaderInteraction" id="_setProperty25">
                     <xquery>resource:classpath:headerFSRequest.xquery</xquery>
-                </setProperty>
-                <log id="_log19" loggingLevel="INFO" message="------------------------------- ${body}"/>
-                <setProperty id="_setProperty30" propertyName="inputInteraction">
-                    <xquery>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:head="http://telefonica.com/globalIntegration/header" xmlns:v1="http://telefonica.com/globalIntegration/services/CreateInteraction/v1"&gt;
-					   &lt;soapenv:Header&gt;
-					     {parse-xml-fragment($inputHeaderInteraction)}
-					   &lt;/soapenv:Header&gt;
-					   &lt;soapenv:Body&gt;
-					      {parse-xml-fragment($inputBodyInteraction)}
-					   &lt;/soapenv:Body&gt;
-					&lt;/soapenv:Envelope&gt;
-					</xquery>
+                </setHeader>
+                <setProperty id="_setProperty26" propertyName="inputInteraction">
+                    <xquery>
+						declare variable $in.headers.inputHeaderInteraction external;
+						declare variable $in.headers.inputBodyInteraction external;
+						&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:head="http://telefonica.com/globalIntegration/header" xmlns:v1="http://telefonica.com/globalIntegration/services/CreateInteraction/v1"&gt;
+                        &lt;soapenv:Header&gt;
+                        {parse-xml-fragment($in.headers.inputHeaderInteraction)}
+                        &lt;/soapenv:Header&gt;
+                        &lt;soapenv:Body&gt;
+                        {parse-xml-fragment($in.headers.inputBodyInteraction)}
+                        &lt;/soapenv:Body&gt;
+                        &lt;/soapenv:Envelope&gt;
+                    </xquery>
                 </setProperty>
                 <setBody id="_setBody1">
                     <simple resultType="java.lang.String">${exchangeProperty.inputInteraction}</simple>
                 </setBody>
-                <setProperty id="_setProperty31" propertyName="outputInteraction">
-                    <simple resultType="java.lang.String">&lt;soap-env:Body xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"&gt;${body}&lt;/soap-env:Body&gt;</simple>
-                </setProperty>
-                <setProperty id="_setProperty32" propertyName="body">
-                    <simple>${body}</simple>
-                </setProperty>
+                <camel:setHeader headerName="Accept" id="_setHeader22">
+                    <camel:constant>text/xml</camel:constant>
+                </camel:setHeader>
+                <camel:setHeader headerName="Content-Type" id="_setHeader23">
+                    <camel:constant>text/xml</camel:constant>
+                </camel:setHeader>
+                <camel:enrich id="callCreateinteractionfs_bs_business">
+                    <camel:simple>{{service.createinteractionfs_bs_business.url}}</camel:simple>
+                </camel:enrich>
                 <doCatch id="_doCatch2">
                     <exception>java.lang.Exception</exception>
                     <log id="_log7" loggingLevel="ERROR" message="${exception.message}, ${exception.stacktrace}"/>
                     <to id="_to6" uri="direct:_onErrorHandler-7922032864275128059-13f59d1a.15fdb577996.-7f14"/>
                 </doCatch>
             </doTry>
-            <!--stage-->
-            <!--actions-->
             <setHeader headerName="xqueryContext" id="_setHeader7">
                 <simple>${exchangeProperty.body}</simple>
             </setHeader>
-            <setProperty id="_setProperty33" propertyName="Mensaje">
+            <setProperty id="_setProperty29" propertyName="Mensaje">
                 <xquery headerName="xqueryContext">/*</xquery>
             </setProperty>
             <removeHeader headerName="xqueryContext" id="_removeHeader3"/>
-            <setProperty id="_setProperty34" propertyName="response">
+            <setProperty id="_setProperty30" propertyName="response">
                 <xquery>resource:classpath:AppMovilResponse.xquery</xquery>
             </setProperty>
-            <setProperty id="_setProperty35" propertyName="anyType">
+            <setProperty id="_setProperty31" propertyName="anyType">
                 <simple resultType="java.lang.String">${exchangeProperty.response}</simple>
             </setProperty>
-            <setProperty id="_setProperty36" propertyName="responseXML">
+            <setProperty id="_setProperty32" propertyName="responseXML">
                 <xquery>resource:classpath:removeNamespace.xquery</xquery>
             </setProperty>
-            <setProperty id="_setProperty37" propertyName="param1">
+            <setProperty id="_setProperty33" propertyName="param1">
                 <xquery type="java.lang.String">$responseXML</xquery>
             </setProperty>
-            <bean id="_bean3"
+            <bean id="_bean11"
                 method="xmltoJSON(${exchangeProperty.param1})" ref="JsonXml"/>
-            <setProperty id="_setProperty38" propertyName="respuesta">
+            <setProperty id="_setProperty34" propertyName="respuesta">
                 <simple>${body}</simple>
             </setProperty>
-            <removeProperty id="_removeProperty3" propertyName="param1"/>
+            <removeProperty id="_removeProperty2" propertyName="param1"/>
             <setHeader headerName="xqueryContext" id="_setHeader8">
                 <simple>${exchangeProperty.body}</simple>
             </setHeader>
             <setBody id="_setBody2">
                 <xquery headerName="xqueryContext" type="java.lang.String">replace node . with $respuesta</xquery>
             </setBody>
-            <setProperty id="_setProperty39" propertyName="body">
+            <setProperty id="_setProperty35" propertyName="body">
                 <simple>${body}</simple>
             </setProperty>
             <removeHeader headerName="xqueryContext" id="_removeHeader4"/>
@@ -309,22 +374,19 @@
             </setHeader>
             <log id="_log8" loggingLevel="INFO" message="Completed response-pipeline PipelinePairConsultaPlanFS_response"/>
         </route>
-        <!--pipeline[@type='response']-->
         <route id="Default1_response">
             <from id="_from5" uri="direct:Default1_response"/>
             <log id="_log9" loggingLevel="INFO" message="Starting response-pipeline Default1_response"/>
-            <!--stage-->
-            <!--actions-->
-            <setProperty id="_setProperty40" propertyName="Message">
+            <setProperty id="_setProperty36" propertyName="Message">
                 <xquery>'Business Error'</xquery>
             </setProperty>
-            <setProperty id="_setProperty41" propertyName="Code">
+            <setProperty id="_setProperty37" propertyName="Code">
                 <xquery>'1051'</xquery>
             </setProperty>
-            <setProperty id="_setProperty42" propertyName="Detail">
+            <setProperty id="_setProperty38" propertyName="Detail">
                 <xquery>'El metodo HTTP no se encuentra definido'</xquery>
             </setProperty>
-            <setProperty id="_setProperty43" propertyName="body">
+            <setProperty id="_setProperty39" propertyName="body">
                 <xquery>resource:classpath:faultJSONRs.xquery</xquery>
             </setProperty>
             <setHeader headerName="Content-Type" id="_setHeader10">
@@ -339,22 +401,24 @@
             <from id="_from6" uri="direct:_onErrorHandler-5282490157209716060-252edc8b.15f7d309bbd.-7d73"/>
             <log id="_log11" loggingLevel="INFO" message="Starting error-pipeline _onErrorHandler-5282490157209716060-252edc8b.15f7d309bbd.-7d73"/>
             <process id="_process2" ref="faultProcessor"/>
-            <!--stage-->
-            <!--actions-->
-            <setProperty id="_setProperty44" propertyName="Message">
+            <setProperty id="_setProperty40" propertyName="Message">
                 <xquery>'Technical Error'</xquery>
             </setProperty>
-            <setProperty id="_setProperty45" propertyName="Code">
+            <setProperty id="_setProperty41" propertyName="Code">
                 <xquery>'4050'</xquery>
             </setProperty>
             <setHeader headerName="xqueryContext" id="_setHeader11">
                 <simple>${exchangeProperty.fault}</simple>
             </setHeader>
-            <setProperty id="_setProperty46" propertyName="Detail">
-                <xquery headerName="xqueryContext">concat('Error consultando el servicio QueryPurchasedOffering de FS. ',$fault/ctx:errorCode, ' - ',$fault/ctx:reason/text(),' - ', /ctx:details/text())</xquery>
+            <setProperty id="_setProperty42" propertyName="Detail">
+                <xquery headerName="xqueryContext">
+					declare namespace ctx = "http://www.bea.com/wli/sb/context";
+					declare variable $in.headers.xqueryContext external;
+					concat('Error creando la interación. ',$in.headers.xqueryContext/ctx:errorCode, ' - ', $in.headers.xqueryContext/ctx:reason/text(), ' - ', /ctx:details/text())
+				</xquery>
             </setProperty>
             <removeHeader headerName="xqueryContext" id="_removeHeader5"/>
-            <setProperty id="_setProperty47" propertyName="body">
+            <setProperty id="_setProperty43" propertyName="body">
                 <xquery>resource:classpath:faultJSONRs.xquery</xquery>
             </setProperty>
             <setHeader headerName="Content-Type" id="_setHeader12">
@@ -364,27 +428,28 @@
                 id="_throwException4" message="${body}"/>
             <log id="_log12" loggingLevel="INFO" message="Completed error-pipeline _onErrorHandler-5282490157209716060-252edc8b.15f7d309bbd.-7d73"/>
         </route>
-        <!--pipeline[@type='error']-->
         <route id="_onErrorHandler-5282490157209716060-252edc8b.15f7d309bbd.-7725">
             <from id="_from7" uri="direct:_onErrorHandler-5282490157209716060-252edc8b.15f7d309bbd.-7725"/>
             <log id="_log13" loggingLevel="INFO" message="Starting error-pipeline _onErrorHandler-5282490157209716060-252edc8b.15f7d309bbd.-7725"/>
             <process id="_process3" ref="faultProcessor"/>
-            <!--stage-->
-            <!--actions-->
-            <setProperty id="_setProperty48" propertyName="Message">
+            <setProperty id="_setProperty44" propertyName="Message">
                 <xquery>'Business Error'</xquery>
             </setProperty>
-            <setProperty id="_setProperty49" propertyName="Code">
+            <setProperty id="_setProperty45" propertyName="Code">
                 <xquery>'4050'</xquery>
             </setProperty>
             <setHeader headerName="xqueryContext" id="_setHeader13">
                 <simple>${exchangeProperty.fault}</simple>
             </setHeader>
-            <setProperty id="_setProperty50" propertyName="Detail">
-                <xquery headerName="xqueryContext">concat('Error en: ',$fault/ctx:errorCode, ' - ', $fault/ctx:reason/text(), ' - ', /ctx:details/text())</xquery>
+            <setProperty id="_setProperty46" propertyName="Detail">
+                <xquery headerName="xqueryContext">
+					declare namespace ctx = "http://www.bea.com/wli/sb/context";
+					declare variable $in.headers.xqueryContext external;
+					concat('Error creando la interación. ',$in.headers.xqueryContext/ctx:errorCode, ' - ', $in.headers.xqueryContext/ctx:reason/text(), ' - ', /ctx:details/text())
+				</xquery>
             </setProperty>
             <removeHeader headerName="xqueryContext" id="_removeHeader6"/>
-            <setProperty id="_setProperty51" propertyName="body">
+            <setProperty id="_setProperty47" propertyName="body">
                 <xquery>resource:classpath:faultJSONRs.xquery</xquery>
             </setProperty>
             <setHeader headerName="Content-Type" id="_setHeader14">
@@ -394,27 +459,28 @@
                 id="_throwException5" message="${body}"/>
             <log id="_log14" loggingLevel="INFO" message="Completed error-pipeline _onErrorHandler-5282490157209716060-252edc8b.15f7d309bbd.-7725"/>
         </route>
-        <!--pipeline[@type='error']-->
         <route id="_onErrorHandler-7922032864275128059-13f59d1a.15fdb577996.-7f14">
             <from id="_from8" uri="direct:_onErrorHandler-7922032864275128059-13f59d1a.15fdb577996.-7f14"/>
             <log id="_log15" loggingLevel="INFO" message="Starting error-pipeline _onErrorHandler-7922032864275128059-13f59d1a.15fdb577996.-7f14"/>
             <process id="_process4" ref="faultProcessor"/>
-            <!--stage-->
-            <!--actions-->
-            <setProperty id="_setProperty52" propertyName="Message">
+            <setProperty id="_setProperty48" propertyName="Message">
                 <xquery>'Business Error'</xquery>
             </setProperty>
-            <setProperty id="_setProperty53" propertyName="Code">
+            <setProperty id="_setProperty49" propertyName="Code">
                 <xquery>'1053'</xquery>
             </setProperty>
             <setHeader headerName="xqueryContext" id="_setHeader15">
                 <simple>${exchangeProperty.fault}</simple>
             </setHeader>
-            <setProperty id="_setProperty54" propertyName="Detail">
-                <xquery headerName="xqueryContext">concat('Error creando la interación. ',$fault/ctx:errorCode, ' - ', $fault/ctx:reason/text(), ' - ', /ctx:details/text())</xquery>
+            <setProperty id="_setProperty50" propertyName="Detail">
+                <xquery headerName="xqueryContext">
+					declare namespace ctx = "http://www.bea.com/wli/sb/context";
+					declare variable $in.headers.xqueryContext external;
+					concat('Error creando la interación. ',$in.headers.xqueryContext/ctx:errorCode, ' - ', $in.headers.xqueryContext/ctx:reason/text(), ' - ', /ctx:details/text())
+				</xquery>
             </setProperty>
             <removeHeader headerName="xqueryContext" id="_removeHeader7"/>
-            <setProperty id="_setProperty55" propertyName="body">
+            <setProperty id="_setProperty51" propertyName="body">
                 <xquery>resource:classpath:faultJSONRs.xquery</xquery>
             </setProperty>
             <setHeader headerName="Content-Type" id="_setHeader16">

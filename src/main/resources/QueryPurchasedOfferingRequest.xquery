@@ -1,5 +1,4 @@
 xquery version "3.0" encoding "UTF-8";
-(:: pragma bea:global-element-return element="ns0:queryPurchasedOfferingRequest" location="../schemas/XMLSchema_290342992.xsd" ::)
 
 declare namespace ns0 = "http://telefonica.com/globalIntegration/services/QueryPurchasedOffering/v1";
 declare namespace xf = "http://tempuri.org/APP_Movil/Resources/Common/xquery/QueryPurchasedOfferingRequest/";

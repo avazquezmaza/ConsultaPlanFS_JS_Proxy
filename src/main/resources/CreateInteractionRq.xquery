@@ -1,5 +1,4 @@
 xquery version "3.0" encoding "UTF-8";
-(:: pragma bea:global-element-return element="ns0:createInteractionRequest" location="../schemas/XMLSchema_-1522377699.xsd" ::)
 
 declare namespace ns0 = "http://telefonica.com/globalIntegration/services/CreateInteraction/v1";
 declare namespace xf = "http://tempuri.org/APP_Movil/Resources/Common/xquery/CreateInteractionRq/";

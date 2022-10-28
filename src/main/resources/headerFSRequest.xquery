@@ -1,5 +1,4 @@
 xquery version "3.0" encoding "UTF-8";
-(:: pragma bea:global-element-return element="ns0:HeaderIn" location="../schemas/XMLSchema_415501769.xsd" ::)
 
 declare namespace ns0 = "http://telefonica.com/globalIntegration/header";
 declare namespace xf = "http://tempuri.org/APP_Movil/Resources/Common/xquery/headerFSRequest/";
@@ -11,8 +10,6 @@ declare function xf:headerFSRequest($country as xs:string,
     $originator as xs:string,
     $userID as xs:string,
     $operation as xs:string,
-    $destination as xs:string,
-    $timestamp as xs:string,
     $userValue as xs:string,
     $passwordValue as xs:string,
     $chanelValue as xs:string)
@@ -60,8 +57,6 @@ declare variable $system as xs:string external;
 declare variable $originator as xs:string external;
 declare variable $userID as xs:string external;
 declare variable $operation as xs:string external;
-declare variable $destination as xs:string external;
-declare variable $timestamp as xs:string external;
 declare variable $userValue as xs:string external;
 declare variable $passwordValue as xs:string external;
 declare variable $chanelValue as xs:string external;
@@ -73,8 +68,6 @@ xf:headerFSRequest($country,
     $originator,
     $userID,
     $operation,
-    $destination,
-    $timestamp,
     $userValue,
     $passwordValue,
     $chanelValue)
